@@ -1,0 +1,10 @@
+**/bin
+**/obj
+.env
+.env.*
+.git
+.local
+Lorcana.Tests
+tools/
+MiniTemplateEngineUnitTest
+MyORMLibraryUnitTest

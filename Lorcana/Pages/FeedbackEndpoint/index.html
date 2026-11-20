@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Обратная связь · Lorcana</title>
+  <link rel="stylesheet" href="/assets/style.css">
+  <script src="/assets/site.js" defer></script>
+</head>
+<body>
+  <header class="site-header"><div class="wrap">
+    <a class="logo" href="/">Lorcana <span>Cards</span></a>
+    <nav class="main-nav" aria-label="Основное меню"><a href="/">Каталог</a><a href="/feedback" class="active" aria-current="page">Обратная связь</a><a href="/auth/login">Админ-панель</a></nav>
+  </div></header>
+  <main class="wrap">
+    <h1 class="page-title">Обратная связь</h1>
+    <p class="page-subtitle">Сообщите об ошибке в карточке или предложите улучшение.</p>
+    <form class="form-card" id="feedbackForm" action="/api/feedback" method="post">
+      <div class="form-field"><label for="fbName">Имя</label><input id="fbName" name="name" type="text" required minlength="2" maxlength="60" autocomplete="name"></div>
+      <div class="form-field"><label for="fbEmail">E-mail</label><input id="fbEmail" name="email" type="email" required maxlength="254" autocomplete="email"></div>
+      <div class="form-field"><label for="fbTopic">Тема</label>
+        <select id="fbTopic" name="topic" required><option value="">Выберите тему</option><option value="catalog">Каталог</option><option value="error">Ошибка</option><option value="idea">Предложение</option><option value="other">Другое</option></select>
+      </div>
+      <div class="form-field"><label for="fbMessage">Сообщение</label>
+        <textarea id="fbMessage" name="message" rows="5" required minlength="5" maxlength="1000" aria-describedby="messageCounter"></textarea>
+        <span class="char-counter" id="messageCounter">0 / 1000</span>
+      </div>
+      <button class="btn btn-gold" type="submit">Отправить</button>
+      <p data-status role="status" class="form-status"></p>
+    </form>
+  </main>
+  <footer class="site-footer">Учебный проект ОРИС · Lorcana Cards</footer>
+</body>
+</html>

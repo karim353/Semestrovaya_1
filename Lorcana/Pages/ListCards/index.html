@@ -1,0 +1,119 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Галерея карт · Lorcana</title>
+  <link rel="stylesheet" href="/assets/style.css">
+  <link rel="stylesheet" href="/assets/gallery.css">
+</head>
+<body class="gallery-theme">
+  <a class="gallery-skip" href="#catalog">К каталогу</a>
+  <header class="gallery-masthead">
+    <div class="gallery-wrap gallery-header-inner">
+      <a class="gallery-brand" href="/" aria-label="Lorcana — каталог">
+        <img class="gallery-brand-logo" src="/assets/brand/lorcana-logo.png" alt="Disney Lorcana — Trading Card Game" width="284" height="104">
+        <span>Учебный каталог</span>
+      </a>
+      <nav class="gallery-nav" aria-label="Основное меню">
+        <a href="/feedback">Обратная связь</a>
+        <a href="/auth/login">Админ-панель</a>
+      </nav>
+    </div>
+  </header>
+  <main id="catalog">
+    <section class="gallery-hero" aria-labelledby="galleryTitle">
+      <div class="gallery-wrap">
+        <div class="gallery-frame">
+          <h1 id="galleryTitle">Галерея карт</h1>
+          <form id="catalogForm" class="gallery-form" action="/cards" method="get">
+            <div class="gallery-search-tools">
+              <div class="gallery-search">
+                <label class="gallery-sr" for="query">Название или номер карты</label>
+                <input id="query" name="q" type="search" value="${Filters.Q}" maxlength="100" placeholder="Поиск по картам">
+                <button type="submit" aria-label="Найти"><span class="gallery-icon gallery-icon-search" aria-hidden="true"></span></button>
+              </div>
+              <div class="gallery-actions">
+                <details class="gallery-disclosure" name="catalog-tools">
+                  <summary>Фильтры <span class="gallery-icon gallery-icon-filter" aria-hidden="true"></span></summary>
+                  <div class="gallery-popover">
+                    <label>Редкость
+                      <select name="rarity">
+                        $foreach(option in RarityChoices)<option value="${option.Value}"$if(option.Selected) selected$endif>${option.Label}</option>$endforeach
+                      </select>
+                    </label>
+                    <label>Тип карты
+                      <select name="cardType">
+                        $foreach(option in TypeChoices)<option value="${option.Value}"$if(option.Selected) selected$endif>${option.Label}</option>$endforeach
+                      </select>
+                    </label>
+                    <button type="submit" class="gallery-button">Применить</button>
+                  </div>
+                </details>
+                <details class="gallery-disclosure" name="catalog-tools">
+                  <summary>Сортировка <span class="gallery-icon gallery-icon-sort" aria-hidden="true"></span></summary>
+                  <div class="gallery-popover">
+                    <label>Порядок карт
+                      <select name="sort">
+                        $foreach(option in SortChoices)<option value="${option.Value}"$if(option.Selected) selected$endif>${option.Label}</option>$endforeach
+                      </select>
+                    </label>
+                    <button type="submit" class="gallery-button">Применить</button>
+                  </div>
+                </details>
+              </div>
+            </div>
+            <div class="gallery-quick-filters">
+              <div class="gallery-ink-filters">
+                <fieldset class="gallery-options gallery-inkable">
+                  <legend>В чернильницу</legend>
+                  $foreach(option in InkableChoices)
+                  <label class="gallery-option"><input type="radio" name="inkable" value="${option.Value}"$if(option.Selected) checked$endif><span data-inkable="${option.Value}" title="В чернильницу: ${option.Label}"><span class="gallery-option-label">${option.Label}</span></span></label>
+                  $endforeach
+                </fieldset>
+                <fieldset class="gallery-options gallery-ink-colors">
+                  <legend>Цвет чернил</legend>
+                  $foreach(option in InkChoices)
+                  <label class="gallery-option"><input type="radio" name="ink" value="${option.Value}"$if(option.Selected) checked$endif>
+                    <span title="${option.Label}">
+                      $if(option.HasValue)<i class="ink-gem" data-ink="${option.Value}" aria-hidden="true"></i><span class="gallery-sr">${option.Label}</span>
+                      $else${option.Label}$endif
+                    </span>
+                  </label>
+                  $endforeach
+                </fieldset>
+              </div>
+              <fieldset class="gallery-options gallery-costs">
+                <legend>Стоимость карты</legend>
+                $foreach(option in CostChoices)
+                <label class="gallery-option"><input type="radio" name="cost" value="${option.Value}"$if(option.Selected) checked$endif><span data-cost="${option.Value}" title="Стоимость: ${option.Label}"><span class="gallery-option-label">${option.Label}</span></span></label>
+                $endforeach
+              </fieldset>
+              <div class="gallery-apply"><a href="/">Сбросить</a><button type="submit" class="gallery-button gallery-button-primary">Применить</button></div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </section>
+    <section class="gallery-wrap gallery-results" aria-labelledby="resultsTitle">
+      <h2 id="resultsTitle" class="gallery-result-count">Найдено карт: ${Results.Total}</h2>
+      $if(IsEmpty)<p class="gallery-empty">На этой странице нет карт. Измените фильтры или <a href="/">вернитесь к каталогу</a>.</p>$endif
+      <div class="gallery-grid" id="cardsGrid">
+        $foreach(card in Results.Cards)
+        <a class="gallery-card" href="${card.Url}">
+          $if(card.HasImage)<img class="gallery-card-art" src="${card.ImageUrl}" alt="" loading="lazy">
+          $else<div class="gallery-card-art gallery-card-placeholder" aria-hidden="true">◇</div>$endif
+          <span class="gallery-card-name name">${card.Name}</span>
+        </a>
+        $endforeach
+      </div>
+      <nav class="gallery-more" aria-label="Страницы каталога">
+        $if(Results.HasPrevious)<a class="gallery-button" href="${PreviousUrl}">← Назад</a>$endif
+        <span>Страница ${Results.Page}</span>
+        $if(Results.HasNext)<a class="gallery-button" href="${NextUrl}">Далее →</a>$endif
+      </nav>
+    </section>
+  </main>
+  <footer class="gallery-footer"><span>Учебный проект ОРИС</span><span>Иллюстрации и фирменная графика © Disney / Ravensburger</span><a href="/feedback">Обратная связь</a></footer>
+</body>
+</html>

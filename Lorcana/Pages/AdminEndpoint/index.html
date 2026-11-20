@@ -1,0 +1,26 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Вход · Lorcana</title>
+  <link rel="stylesheet" href="/assets/style.css">
+  <script src="/assets/site.js" defer></script>
+</head>
+<body>
+  <header class="site-header"><div class="wrap">
+    <a class="logo" href="/">Lorcana <span>Cards</span></a>
+    <nav class="main-nav" aria-label="Основное меню"><a href="/">Каталог</a><a href="/feedback">Обратная связь</a></nav>
+  </div></header>
+  <main class="wrap">
+    <h1 class="page-title">Вход для администратора</h1>
+    <form class="form-card" id="loginForm" action="/api/auth/login" method="post">
+      <div class="form-field"><label for="login">Логин</label><input id="login" type="text" name="login" required minlength="3" maxlength="32" pattern="[A-Za-z0-9_.\-]{3,32}" autocomplete="username"></div>
+      <div class="form-field"><label for="password">Пароль</label><input id="password" type="password" name="password" required maxlength="128" autocomplete="current-password"></div>
+      <button class="btn btn-gold" type="submit">Войти</button>
+      <p data-status role="status" class="form-status"></p>
+    </form>
+  </main>
+  <footer class="site-footer">Учебный проект ОРИС · Lorcana Cards</footer>
+</body>
+</html>

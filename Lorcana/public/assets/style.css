@@ -1,0 +1,541 @@
+/* ==========================================================================
+   Lorcana Cards — учебный проект (чистый CSS, без библиотек)
+   Тема: тёмно-синяя с золотыми акцентами в стиле оригинальной галереи
+   ========================================================================== */
+
+:root {
+  --bg: #1b2038;
+  --bg-light: #252a48;
+  --bg-card: #2e3454;
+  --gold: #c9a227;
+  --gold-light: #e8c95a;
+  --text: #f2f3f7;
+  --text-dim: #aab0c8;
+  --danger: #e5544c;
+  --success: #4caf7d;
+  --amber: #f5b73f;
+  --amethyst: #9b59b6;
+  --emerald: #2ecc71;
+  --ruby: #e74c3c;
+  --sapphire: #3498db;
+  --steel: #95a5a6;
+  --radius: 10px;
+  --shadow: 0 4px 18px rgba(0, 0, 0, .35);
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+html { font-size: 16px; }
+
+body {
+  font-family: "Segoe UI", Arial, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+img { display: block; max-width: 100%; }
+
+/* ---------- Шапка ---------- */
+.site-header {
+  background: var(--bg-light);
+  border-bottom: 2px solid var(--gold);
+  position: sticky;
+  top: 0;
+  z-index: 50;
+}
+
+.site-header .wrap {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 14px 20px;
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  flex-wrap: wrap;
+}
+
+.logo {
+  font-size: 1.35rem;
+  font-weight: 800;
+  letter-spacing: .06em;
+  color: var(--gold-light);
+  text-decoration: none;
+  text-transform: uppercase;
+}
+
+.logo span { color: var(--text); }
+
+.main-nav { display: flex; gap: 6px; flex-wrap: wrap; }
+
+.main-nav a {
+  color: var(--text-dim);
+  text-decoration: none;
+  padding: 8px 14px;
+  border-radius: 6px;
+  font-weight: 600;
+  transition: background .2s, color .2s;
+}
+
+.main-nav a:hover { background: rgba(201, 162, 39, .15); color: var(--gold-light); }
+.main-nav a.active { color: var(--gold-light); border-bottom: 2px solid var(--gold); border-radius: 6px 6px 0 0; }
+
+/* ---------- Каркас ---------- */
+.wrap { max-width: 1200px; margin: 0 auto; padding: 24px 20px; width: 100%; }
+
+.page-title {
+  font-size: 2rem;
+  letter-spacing: .04em;
+  margin-bottom: 6px;
+  text-transform: uppercase;
+}
+
+.page-subtitle { color: var(--text-dim); margin-bottom: 24px; }
+
+.site-footer {
+  margin-top: auto;
+  background: var(--bg-light);
+  border-top: 1px solid rgba(201, 162, 39, .3);
+  color: var(--text-dim);
+  text-align: center;
+  padding: 18px;
+  font-size: .9rem;
+}
+
+/* ---------- Панель поиска и фильтров ---------- */
+.toolbar {
+  background: var(--bg-light);
+  border: 1px solid rgba(201, 162, 39, .25);
+  border-radius: var(--radius);
+  padding: 18px;
+  margin-bottom: 22px;
+  box-shadow: var(--shadow);
+}
+
+.search-row { position: relative; margin-bottom: 14px; }
+
+.search-input {
+  width: 100%;
+  padding: 12px 44px 12px 16px;
+  font-size: 1rem;
+  color: var(--text);
+  background: var(--bg);
+  border: 1px solid rgba(255, 255, 255, .15);
+  border-radius: 8px;
+  outline: none;
+  transition: border-color .2s, box-shadow .2s;
+}
+
+.search-input:focus { border-color: var(--gold); box-shadow: 0 0 0 3px rgba(201, 162, 39, .2); }
+
+.search-icon {
+  position: absolute;
+  right: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--text-dim);
+  pointer-events: none;
+}
+
+/* Автокомплит */
+.autocomplete-list {
+  position: absolute;
+  top: calc(100% + 4px);
+  left: 0;
+  right: 0;
+  background: var(--bg-card);
+  border: 1px solid rgba(201, 162, 39, .35);
+  border-radius: 8px;
+  list-style: none;
+  max-height: 260px;
+  overflow-y: auto;
+  z-index: 40;
+  box-shadow: var(--shadow);
+  display: none;
+}
+
+.autocomplete-list.visible { display: block; }
+
+.autocomplete-list li {
+  padding: 10px 16px;
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  transition: background .15s;
+}
+
+.autocomplete-list li:hover,
+.autocomplete-list li.selected { background: rgba(201, 162, 39, .18); }
+
+.autocomplete-list .hint { color: var(--text-dim); font-size: .85rem; }
+
+/* Фильтры */
+.filters { display: flex; gap: 18px; flex-wrap: wrap; align-items: flex-end; }
+
+.filter-group { display: flex; flex-direction: column; gap: 6px; }
+
+.filter-group > span {
+  font-size: .78rem;
+  text-transform: uppercase;
+  letter-spacing: .08em;
+  color: var(--text-dim);
+}
+
+.color-filters { display: flex; gap: 6px; }
+
+.color-chip {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  border: 2px solid transparent;
+  cursor: pointer;
+  opacity: .55;
+  transition: transform .15s, opacity .15s, border-color .15s;
+}
+
+.color-chip:hover { transform: scale(1.12); opacity: 1; }
+.color-chip.active { opacity: 1; border-color: #fff; box-shadow: 0 0 8px rgba(255, 255, 255, .4); }
+
+.color-chip[data-color="AMBER"] { background: var(--amber); }
+.color-chip[data-color="AMETHYST"] { background: var(--amethyst); }
+.color-chip[data-color="EMERALD"] { background: var(--emerald); }
+.color-chip[data-color="RUBY"] { background: var(--ruby); }
+.color-chip[data-color="SAPPHIRE"] { background: var(--sapphire); }
+.color-chip[data-color="STEEL"] { background: var(--steel); }
+
+select, .btn {
+  font: inherit;
+  color: var(--text);
+  background: var(--bg);
+  border: 1px solid rgba(255, 255, 255, .15);
+  border-radius: 8px;
+  padding: 9px 14px;
+}
+
+select:focus { border-color: var(--gold); outline: none; }
+
+.btn {
+  cursor: pointer;
+  font-weight: 600;
+  transition: background .2s, border-color .2s, transform .1s;
+}
+
+.btn:hover { border-color: var(--gold); }
+.btn:active { transform: scale(.97); }
+
+.btn-gold { background: var(--gold); border-color: var(--gold); color: #1b2038; }
+.btn-gold:hover { background: var(--gold-light); }
+
+.btn-ghost { background: transparent; }
+
+/* ---------- Сетка карточек ---------- */
+.results-info {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  color: var(--text-dim);
+  margin-bottom: 14px;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.results-info strong { color: var(--gold-light); font-size: 1.15rem; }
+
+.cards-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 18px;
+}
+
+.card-item {
+  background: var(--bg-card);
+  border-radius: var(--radius);
+  overflow: hidden;
+  text-decoration: none;
+  color: var(--text);
+  border: 1px solid transparent;
+  transition: transform .2s, border-color .2s, box-shadow .2s;
+  animation: fadeIn .35s ease;
+}
+
+.card-item:hover {
+  transform: translateY(-6px);
+  border-color: var(--gold);
+  box-shadow: 0 10px 24px rgba(0, 0, 0, .45);
+}
+
+.card-item img { width: 100%; aspect-ratio: 63 / 88; object-fit: cover; background: #161a2e; }
+
+.card-item .info { padding: 10px 12px; }
+
+.card-item .name { font-weight: 700; font-size: .95rem; margin-bottom: 4px; }
+
+.card-item .meta {
+  display: flex;
+  justify-content: space-between;
+  color: var(--text-dim);
+  font-size: .8rem;
+}
+
+.rarity-badge {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 20px;
+  font-size: .7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .05em;
+  background: rgba(255, 255, 255, .1);
+}
+
+.rarity-COMMON { color: #cfd4e6; }
+.rarity-UNCOMMON { color: #7ec8ff; }
+.rarity-RARE { color: #ffd76a; }
+.rarity-SUPER { color: #ff9d5c; }
+.rarity-LEGENDARY, .rarity-ENCHANTED, .rarity-EPIC, .rarity-ICONIC { color: #e79bff; }
+
+.cost-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  background: var(--bg);
+  border: 1px solid var(--gold);
+  color: var(--gold-light);
+  font-weight: 700;
+  font-size: .85rem;
+}
+
+/* ---------- Состояния ---------- */
+.spinner {
+  width: 46px;
+  height: 46px;
+  border: 4px solid rgba(201, 162, 39, .2);
+  border-top-color: var(--gold);
+  border-radius: 50%;
+  margin: 60px auto;
+  animation: spin .8s linear infinite;
+}
+
+.state-box {
+  text-align: center;
+  padding: 60px 20px;
+  color: var(--text-dim);
+}
+
+.state-box h2 { color: var(--text); margin-bottom: 10px; }
+.state-box .btn { margin-top: 18px; }
+
+.load-more-wrap { text-align: center; margin: 28px 0 10px; }
+
+/* ---------- Страница карточки ---------- */
+.card-detail {
+  display: grid;
+  grid-template-columns: 340px 1fr;
+  gap: 36px;
+  align-items: start;
+}
+
+.card-detail .image-col img {
+  border-radius: 14px;
+  box-shadow: var(--shadow);
+  transition: transform .3s;
+}
+
+.card-detail .image-col img:hover { transform: scale(1.03); }
+
+.card-detail h1 { font-size: 1.9rem; margin-bottom: 4px; }
+.card-detail .set-line { color: var(--text-dim); margin-bottom: 20px; }
+
+.props-table { width: 100%; border-collapse: collapse; margin-bottom: 22px; }
+
+.props-table th, .props-table td {
+  text-align: left;
+  padding: 10px 12px;
+  border-bottom: 1px solid rgba(255, 255, 255, .08);
+}
+
+.props-table th {
+  width: 220px;
+  color: var(--text-dim);
+  font-weight: 600;
+  text-transform: uppercase;
+  font-size: .75rem;
+  letter-spacing: .07em;
+}
+
+.rules-block, .flavor-block {
+  background: var(--bg-light);
+  border-left: 3px solid var(--gold);
+  border-radius: 0 8px 8px 0;
+  padding: 14px 18px;
+  margin-bottom: 14px;
+  white-space: pre-line;
+  line-height: 1.55;
+}
+
+.flavor-block { font-style: italic; color: var(--text-dim); border-left-color: rgba(255, 255, 255, .25); }
+
+.color-dots { display: inline-flex; gap: 6px; }
+
+.color-dot { width: 18px; height: 18px; border-radius: 50%; display: inline-block; }
+.color-dot.AMBER { background: var(--amber); }
+.color-dot.AMETHYST { background: var(--amethyst); }
+.color-dot.EMERALD { background: var(--emerald); }
+.color-dot.RUBY { background: var(--ruby); }
+.color-dot.SAPPHIRE { background: var(--sapphire); }
+.color-dot.STEEL { background: var(--steel); }
+
+/* ---------- Формы ---------- */
+.form-card {
+  background: var(--bg-light);
+  border: 1px solid rgba(201, 162, 39, .25);
+  border-radius: var(--radius);
+  padding: 26px;
+  max-width: 640px;
+  box-shadow: var(--shadow);
+}
+
+.form-card.wide { max-width: 860px; }
+
+.form-field { margin-bottom: 18px; }
+
+.form-field label {
+  display: block;
+  margin-bottom: 6px;
+  font-weight: 600;
+  font-size: .92rem;
+}
+
+.form-field label .req { color: var(--danger); }
+
+.form-field input[type="text"],
+.form-field input[type="email"],
+.form-field input[type="password"],
+.form-field input[type="number"],
+.form-field select,
+.form-field textarea {
+  width: 100%;
+  padding: 10px 14px;
+  font: inherit;
+  color: var(--text);
+  background: var(--bg);
+  border: 1px solid rgba(255, 255, 255, .15);
+  border-radius: 8px;
+  outline: none;
+  transition: border-color .2s, box-shadow .2s;
+}
+
+.form-field input:focus, .form-field select:focus, .form-field textarea:focus {
+  border-color: var(--gold);
+  box-shadow: 0 0 0 3px rgba(201, 162, 39, .18);
+}
+
+.form-field.invalid input,
+.form-field.invalid select,
+.form-field.invalid textarea { border-color: var(--danger); }
+
+.field-error {
+  display: none;
+  color: var(--danger);
+  font-size: .82rem;
+  margin-top: 5px;
+}
+
+.form-field.invalid .field-error { display: block; animation: fadeIn .2s; }
+
+.char-counter {
+  text-align: right;
+  font-size: .8rem;
+  color: var(--text-dim);
+  margin-top: 4px;
+}
+
+.char-counter.over { color: var(--danger); font-weight: 700; }
+
+.form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+
+.alert {
+  border-radius: 8px;
+  padding: 12px 16px;
+  margin-bottom: 18px;
+  display: none;
+  animation: fadeIn .25s;
+}
+
+.alert.visible { display: block; }
+.alert-error { background: rgba(229, 84, 76, .15); border: 1px solid var(--danger); color: #ffb3ae; }
+.alert-success { background: rgba(76, 175, 125, .15); border: 1px solid var(--success); color: #a9e6c7; }
+
+/* ---------- Таблица админки ---------- */
+.admin-table { width: 100%; border-collapse: collapse; margin-top: 16px; }
+
+.admin-table th, .admin-table td {
+  padding: 10px 12px;
+  border-bottom: 1px solid rgba(255, 255, 255, .08);
+  text-align: left;
+  font-size: .92rem;
+}
+
+.admin-table th {
+  color: var(--text-dim);
+  text-transform: uppercase;
+  font-size: .72rem;
+  letter-spacing: .07em;
+}
+
+.admin-table .btn { padding: 5px 12px; font-size: .82rem; }
+
+.section-gap { margin-top: 40px; }
+
+[hidden] { display: none !important; }
+a { color: var(--gold-light); }
+.filter-label { display: block; margin-bottom: .45rem; font-weight: 600; }
+.catalog-filters { margin-top: 1rem; }
+.card-placeholder {
+  display: grid; place-items: center; aspect-ratio: 2.5 / 3.5;
+  padding: .75rem; background: var(--bg-light); color: var(--text-dim); text-align: center;
+}
+.card-item .meta { display: block; }
+.back-link { margin-bottom: 1.5rem; }
+.btn { text-decoration: none; }
+.btn:disabled { opacity: .55; cursor: wait; }
+.form-status { margin-top: .75rem; color: var(--gold-light); }
+.form-status:empty { display: none; }
+.form-status.is-error, .results-info.is-error { color: #ffb3ae; }
+.admin-heading, .row-actions, .editor-toolbar { display: flex; align-items: center; flex-wrap: wrap; gap: .5rem; }
+.admin-heading { justify-content: space-between; margin-bottom: 1rem; }
+.admin-search, #cardForm { margin-top: 1rem; }
+.admin-search .btn { margin-top: .5rem; }
+.table-scroll { overflow-x: auto; }
+.checkbox-field { display: flex; align-items: center; gap: .5rem; margin-bottom: 1rem; }
+.editor-surface {
+  min-height: 8rem; margin-top: .5rem; padding: .75rem; border-radius: 6px;
+  background: var(--bg); border: 1px solid var(--gold); overflow-wrap: anywhere;
+}
+.editor-surface ul, .editor-surface ol, .rules-block ul, .rules-block ol { padding-left: 1.5rem; }
+.rules-block p + p { margin-top: .75rem; }
+:focus-visible { outline: 2px solid var(--gold-light); outline-offset: 3px; }
+
+/* ---------- Анимации ---------- */
+@keyframes spin { to { transform: rotate(360deg); } }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+
+/* ---------- Адаптивность ---------- */
+@media (max-width: 860px) {
+  .card-detail { grid-template-columns: 1fr; }
+  .card-detail .image-col { max-width: 320px; margin: 0 auto; }
+  .form-row { grid-template-columns: 1fr; }
+}
+
+@media (max-width: 560px) {
+  .cards-grid { grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 12px; }
+  .page-title { font-size: 1.5rem; }
+  .props-table th { width: 130px; }
+  .toolbar { padding: 14px; }
+}

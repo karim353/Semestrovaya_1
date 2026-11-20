@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>${Card.Name} · Lorcana</title>
+  <link rel="stylesheet" href="/assets/style.css">
+  <link rel="stylesheet" href="/assets/gallery.css">
+</head>
+<body class="gallery-theme">
+  <a class="gallery-skip" href="#card">К карточке</a>
+  <header class="gallery-masthead">
+    <div class="gallery-wrap gallery-header-inner">
+      <a class="gallery-brand" href="/" aria-label="Lorcana — каталог">
+        <img class="gallery-brand-logo" src="/assets/brand/lorcana-logo.png" alt="Disney Lorcana — Trading Card Game" width="284" height="104">
+        <span>Учебный каталог</span>
+      </a>
+      <nav class="gallery-nav" aria-label="Основное меню">
+        <a href="/feedback">Обратная связь</a>
+        <a href="/auth/login">Админ-панель</a>
+      </nav>
+    </div>
+  </header>
+  <main id="card" class="gallery-wrap gallery-detail">
+    <a class="gallery-back" href="/">← К галерее карт</a>
+    <article class="gallery-detail-layout" aria-labelledby="cardTitle">
+      <div class="gallery-detail-image">
+        $if(Card.HasImage)<img src="${Card.ImageUrl}" alt="${Card.Name}">
+        $else<div class="gallery-card-art gallery-card-placeholder" aria-label="Нет изображения">◇</div>$endif
+      </div>
+      <div class="gallery-detail-panel">
+        <header class="gallery-card-heading">
+          <p class="gallery-kicker">${Card.Set}</p>
+          <h1 id="cardTitle">${Card.Name}</h1>
+          <p class="gallery-card-number">${Card.Identifier}</p>
+        </header>
+        <dl class="gallery-card-facts">
+          <div><dt>Цвет чернил</dt><dd><i class="ink-gem" data-ink="${Card.Ink}" aria-hidden="true"></i>${Card.InkLabel}</dd></div>
+          <div><dt>Стоимость</dt><dd><span class="gallery-cost-symbol" aria-hidden="true"></span>${Card.Cost}</dd></div>
+          <div><dt>Редкость</dt><dd>${Card.Rarity}</dd></div>
+          <div><dt>В чернильницу</dt><dd>$if(Card.Inkable)Да$else Нет$endif</dd></div>
+          $if(HasIllustrator)<div><dt>Художник</dt><dd>${Illustrator}</dd></div>$endif
+        </dl>
+        $if(HasDescription)<section class="gallery-card-text">
+          <h2>Текст карты</h2>
+          <div>${Description}</div>
+        </section>$endif
+        $if(HasFlavor)<blockquote class="gallery-flavor">${Flavor}</blockquote>$endif
+      </div>
+    </article>
+  </main>
+  <footer class="gallery-footer"><span>Учебный проект ОРИС</span><span>Иллюстрации и фирменная графика © Disney / Ravensburger</span><a href="/feedback">Обратная связь</a></footer>
+</body>
+</html>

@@ -1,0 +1,17 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net8.0</TargetFramework>
+    <RollForward>Major</RollForward>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <AssemblyName>Lorcana.App</AssemblyName>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="../Framework/MiniHttpServer.Framework.csproj" />
+    <ProjectReference Include="../MiniTemplateEngine/MiniTemplateEngine.csproj" />
+    <ProjectReference Include="../MyORMLibrary/MyORMLibrary.csproj" />
+    <PackageReference Include="Npgsql" Version="8.0.9" />
+    <None Update="settings.json;public/**/*;Pages/**/*" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="PreserveNewest" />
+  </ItemGroup>
+</Project>

@@ -1,0 +1,30 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: lorcana
+      POSTGRES_USER: lorcana
+      POSTGRES_PASSWORD: "${POSTGRES_PASSWORD:-lorcana-demo-db}"
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+      - ./sql:/docker-entrypoint-initdb.d:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -h 127.0.0.1 -U lorcana -d lorcana"]
+      interval: 3s
+      timeout: 3s
+      retries: 20
+  app:
+    build: .
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      LORCANA_PREFIX: "http://+:8080/"
+      LORCANA_DB: "Host=postgres;Database=lorcana;Username=lorcana"
+      PGPASSWORD: "${POSTGRES_PASSWORD:-lorcana-demo-db}"
+      LORCANA_ADMIN_LOGIN: "${LORCANA_ADMIN_LOGIN:-admin}"
+      LORCANA_ADMIN_PASSWORD: "${LORCANA_ADMIN_PASSWORD:-lorcana-demo-admin}"
+    ports:
+      - "127.0.0.1:${LORCANA_PORT:-8888}:8080"
+volumes:
+  postgres-data:

@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Админ-панель · Lorcana</title>
+  <link rel="stylesheet" href="/assets/style.css">
+  <script src="/assets/site.js" defer></script>
+</head>
+<body>
+  <header class="site-header"><div class="wrap">
+    <a class="logo" href="/">Lorcana <span>Cards</span></a>
+    <nav class="main-nav" aria-label="Основное меню"><a href="/">Каталог</a><a href="/feedback">Обратная связь</a><a class="active" href="/admin" aria-current="page">Админ-панель</a></nav>
+  </div></header>
+  <main class="wrap">
+    <div class="admin-heading">
+      <div><h1 class="page-title">Админ-панель</h1><p class="page-subtitle">Вы вошли как ${Login}</p></div>
+      <form id="logoutForm" action="/api/auth/logout" method="post">
+        <input type="hidden" name="csrf" value="${Csrf}">
+        <button type="submit" class="btn btn-ghost">Выйти</button>
+        <p data-status role="status" class="form-status"></p>
+      </form>
+    </div>
+    <section class="form-card wide" aria-labelledby="editorHeading">
+      <h2 id="editorHeading">Добавить карту</h2>
+      <form id="cardForm" action="/api/admin/cards/create" method="post">
+        <input type="hidden" name="id">
+        <input type="hidden" name="csrf" value="${Csrf}">
+        <div class="form-row">
+          <div class="form-field"><label for="cardName">Название</label><input id="cardName" type="text" name="name" required minlength="2" maxlength="120"></div>
+          <div class="form-field"><label for="cardCode">Внутренний код</label><input id="cardCode" type="text" name="code" required maxlength="13" placeholder="DEMO-15"></div>
+          <div class="form-field"><label for="cardNumber">Коллекционный номер</label><input id="cardNumber" type="text" name="identifier" maxlength="40" placeholder="27/204 EN 14"></div>
+          <div class="form-field"><label for="cardCost">Стоимость</label><input id="cardCost" type="number" name="cost" required min="0" max="99"></div>
+          <div class="form-field"><label for="cardInk">Цвет чернил</label><select id="cardInk" name="inkId" required><option value="">Выберите цвет</option>$foreach(ink in Inks)<option value="${ink.Id}">${ink.Name}</option>$endforeach</select></div>
+          <div class="form-field"><label for="cardSecondInk">Второй цвет</label><select id="cardSecondInk" name="secondInkId"><option value="">Нет</option>$foreach(ink in Inks)<option value="${ink.Id}">${ink.Name}</option>$endforeach</select></div>
+          <div class="form-field"><label for="cardRarity">Редкость</label><select id="cardRarity" name="rarityId" required><option value="">Выберите редкость</option>$foreach(rarity in Rarities)<option value="${rarity.Id}">${rarity.Name}</option>$endforeach</select></div>
+          <div class="form-field"><label for="cardSet">Набор</label><select id="cardSet" name="setId" required><option value="">Выберите набор</option>$foreach(set in Sets)<option value="${set.Id}">${set.Name}</option>$endforeach</select></div>
+          <div class="form-field"><label for="cardType">Тип</label><select id="cardType" name="cardType"><option value="">Не указан</option><option value="characters">Персонаж</option><option value="actions">Действие</option><option value="items">Предмет</option><option value="locations">Локация</option><option value="supplies">Припасы</option></select></div>
+          <div class="form-field"><label for="cardIllustrator">Художник</label><input id="cardIllustrator" type="text" name="illustrator" maxlength="120"></div>
+        </div>
+        <label class="checkbox-field"><input type="checkbox" name="inkable" value="true"> Можно положить в чернильницу</label>
+        <div class="form-field"><label for="cardImage">Изображение</label><input id="cardImage" type="text" name="imageUrl" maxlength="500" placeholder="/assets/cards/… или https://…"></div>
+        <div class="form-field"><label for="cardFlavor">Художественный текст</label><textarea id="cardFlavor" name="flavor" rows="2" maxlength="1000"></textarea></div>
+        <div class="form-field">
+          <span id="descriptionLabel" class="filter-label">Текст карты</span>
+          <div class="editor-toolbar" aria-label="Форматирование">
+            <button type="button" class="btn" data-format="bold" aria-label="Полужирный"><strong>Ж</strong></button>
+            <button type="button" class="btn" data-format="italic" aria-label="Курсив"><em>К</em></button>
+            <button type="button" class="btn" data-format="underline" aria-label="Подчёркивание"><u>П</u></button>
+            <button type="button" class="btn" data-format="insertUnorderedList">Список</button>
+          </div>
+          <div id="descriptionEditor" class="editor-surface" contenteditable="true" role="textbox" aria-multiline="true" aria-labelledby="descriptionLabel"></div>
+          <span class="char-counter" id="editorCounter">0 / 8000</span>
+        </div>
+        <button class="btn btn-gold" id="saveCard" type="submit">Добавить карту</button>
+        <button class="btn btn-ghost" id="cancelEdit" type="button" hidden>Отменить редактирование</button>
+        <p data-status role="status" class="form-status"></p>
+      </form>
+    </section>
+    <section class="form-card wide section-gap" aria-labelledby="cardListHeading">
+      <h2 id="cardListHeading">Карты · ${Results.Total}</h2>
+      <form class="admin-search" action="/admin" method="get">
+        <label for="adminQuery" class="filter-label">Поиск по каталогу</label>
+        <input class="search-input" id="adminQuery" name="q" type="search" value="${Query}" maxlength="100">
+        <button class="btn btn-ghost" type="submit">Найти</button>
+      </form>
+      <p id="adminStatus" role="status" class="form-status"></p>
+      <div class="table-scroll">
+        <table class="admin-table">
+          <thead><tr><th>Карта</th><th>Цвет</th><th>Редкость</th><th>Управление</th></tr></thead>
+          <tbody>
+          $foreach(card in Results.Cards)
+            <tr><td><a href="${card.Url}">${card.Name}</a></td><td>${card.InkLabel}</td><td>${card.Rarity}</td>
+              <td><div class="row-actions">
+                <button class="btn" type="button" data-edit="${card.Id}">Изменить</button>
+                <button class="btn btn-ghost" type="button" data-delete="${card.Id}">Удалить</button>
+              </div></td></tr>
+          $endforeach
+          </tbody>
+        </table>
+      </div>
+      <div class="load-more-wrap row-actions">
+        $if(Results.HasPrevious)<a class="btn btn-ghost" href="${PreviousUrl}">← Назад</a>$endif
+        $if(Results.HasNext)<a class="btn btn-ghost" href="${NextUrl}">Далее →</a>$endif
+      </div>
+    </section>
+  </main>
+  <footer class="site-footer">Учебный проект ОРИС · Lorcana Cards</footer>
+</body>
+</html>
